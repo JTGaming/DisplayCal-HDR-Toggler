@@ -1,7 +1,11 @@
 #pragma once
 #include <fstream>
 
+//simple mode 1 - clicks on the taskbar icon and toggles the modes manually
+//simple mode 0 - uses the API to toggle modes (displaycal API is broken currently)
 #define SIMPLE_MODE 1
+
+//simple logging of when modes change
 #define LOGGING_ENABLED 1
 
 #if (SIMPLE_MODE == 1)
@@ -11,6 +15,7 @@
 #define SLEEP_INTERVAL_STEP5 50 //in ms
 
 //these are screen coordinates, for the displaycal taskbar icons
+//customize for each use case
 #define DISPCAL_ICON_LOC 4915, 1415
 #define DISPCAL_LOAD_CAL_LOC 4915, 1080
 #define DISPCAL_RESET_TABLE_LOC 4915, 1110
