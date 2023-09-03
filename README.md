@@ -9,6 +9,9 @@ This app periodically checks for which mode the main display is in, and switches
 Currently, 'simple mode' is enabled by default, which uses screen coordinates to click on the DisplayCal Profile Loader and switch it on or off.
 This is the case because DisplayCal's API/Scripting functions tend to malfunction often and not expose the required methods to do this via code.
 To set the coordinates for your setup, change these definitions:
+
 DISPCAL_ICON_LOC - pixel location of the DisplayCal icon
+
 DISPCAL_LOAD_CAL_LOC - pixel location of the DisplayCal right-click menu "Load calibration" function
+
 DISPCAL_RESET_TABLE_LOC - pixel location of the DisplayCal right-click menu "reset VCGT" function
