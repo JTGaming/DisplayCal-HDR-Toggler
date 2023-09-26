@@ -16,7 +16,9 @@ void DoProcessWork(bool toggle)
 	SetCursorPos(DISPCAL_ICON_LOC);
 	Sleep(SLEEP_INTERVAL_STEP5);
 
+	//sometimes windows does not respond immediately
 	mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
+	Sleep(SLEEP_INTERVAL_STEP5);
 	mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
 
 	Sleep(SLEEP_INTERVAL_STEP4);

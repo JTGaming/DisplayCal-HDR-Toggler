@@ -11,7 +11,7 @@
 #if (SIMPLE_MODE == 1)
 #define ENABLE_DISPCAL true
 #define DISABLE_DISPCAL false
-#define SLEEP_INTERVAL_STEP4 500 //in ms
+#define SLEEP_INTERVAL_STEP4 750 //in ms
 #define SLEEP_INTERVAL_STEP5 50 //in ms
 
 //these are screen coordinates, for the displaycal taskbar icons

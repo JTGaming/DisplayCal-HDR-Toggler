@@ -29,7 +29,7 @@ INT __stdcall WinMain(HINSTANCE, HINSTANCE,
 #endif
 
 	current_mode previous_mode, mode;
-	previous_mode = mode = GetCurrentMonitorMode();
+	previous_mode = GetCurrentMonitorMode();
 
 	while(true)
 	{
