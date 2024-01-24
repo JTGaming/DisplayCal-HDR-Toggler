@@ -8,18 +8,27 @@
 
 #if (SIMPLE_MODE == 1)
 //do it via right-click toggling the option
-void DoProcessWork(bool toggle)
+void DoProcessWork(bool toggle, const std::pair<float, float>& scale_desktop, const POINT& saved_mousePos)
 {
+	std::pair<LONG, LONG> idxs;
+	HWND focus_wnd = GetForegroundWindow();
+	INPUT Inputs[3] = { 0 };
+
 	Sleep(SLEEP_INTERVAL_STEP4);
 
 	//right-click at pos [x,y]
-	SetCursorPos(DISPCAL_ICON_LOC);
-	Sleep(SLEEP_INTERVAL_STEP5);
+	idxs = std::pair<LONG, LONG>(DISPCAL_ICON_LOC);
+	Inputs[0].type = INPUT_MOUSE;
+	Inputs[0].mi.dx = LONG(scale_desktop.first * idxs.first); // desired X coordinate
+	Inputs[0].mi.dy = LONG(scale_desktop.second * idxs.second); // desired Y coordinate
+	Inputs[0].mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK | MOUSEEVENTF_MOVE;
 
-	//sometimes windows does not respond immediately
-	mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
-	Sleep(SLEEP_INTERVAL_STEP5);
-	mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+	Inputs[1].type = INPUT_MOUSE;
+	Inputs[1].mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+
+	Inputs[2].type = INPUT_MOUSE;
+	Inputs[2].mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+	SendInput(3, Inputs, sizeof(INPUT));
 
 	Sleep(SLEEP_INTERVAL_STEP4);
 
@@ -27,27 +36,47 @@ void DoProcessWork(bool toggle)
 	{
 		WriteErrorMessage("DisplayCal Enabled");
 		//click at top option
-		SetCursorPos(DISPCAL_LOAD_CAL_LOC);
-		Sleep(SLEEP_INTERVAL_STEP5);
-		mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-		mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+		idxs = std::pair<LONG, LONG>(DISPCAL_LOAD_CAL_LOC);
+		Inputs[0].type = INPUT_MOUSE;
+		Inputs[0].mi.dx = LONG(scale_desktop.first * idxs.first); // desired X coordinate
+		Inputs[0].mi.dy = LONG(scale_desktop.second * idxs.second); // desired Y coordinate
+		Inputs[0].mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK | MOUSEEVENTF_MOVE;
+
+		Inputs[1].type = INPUT_MOUSE;
+		Inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+
+		Inputs[2].type = INPUT_MOUSE;
+		Inputs[2].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+		SendInput(3, Inputs, sizeof(INPUT));
 	}
 	else
 	{
 		WriteErrorMessage("DisplayCal Disabled");
 		//click at second option
-		SetCursorPos(DISPCAL_RESET_TABLE_LOC);
-		Sleep(SLEEP_INTERVAL_STEP5);
-		mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-		mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+		idxs = std::pair<LONG, LONG>(DISPCAL_RESET_TABLE_LOC);
+		Inputs[0].type = INPUT_MOUSE;
+		Inputs[0].mi.dx = LONG(scale_desktop.first * idxs.first); // desired X coordinate
+		Inputs[0].mi.dy = LONG(scale_desktop.second * idxs.second); // desired Y coordinate
+		Inputs[0].mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK | MOUSEEVENTF_MOVE;
+
+		Inputs[1].type = INPUT_MOUSE;
+		Inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+
+		Inputs[2].type = INPUT_MOUSE;
+		Inputs[2].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+		SendInput(3, Inputs, sizeof(INPUT));
 	}
+
+	//reset back to where user was before we interfered
+	SetCursorPos(saved_mousePos.x, saved_mousePos.y);
+	SetForegroundWindow(focus_wnd);
 }
 #else
 #include <TlHelp32.h>
 #include <algorithm>
 
 //do it via scripting
-void DoProcessWork(const wchar_t* str)
+void DoProcessWork(const wchar_t* str, const std::pair<float, float>&, const POINT&)
 {
 	std::wstring wide(str);
 	std::string str1;
@@ -245,7 +274,7 @@ void WriteErrorMessage(const std::string& err)
 
 // To detect HDR support, we will need to check the color space in the primary DXGI output associated with the app at
 // this point in time (using window/display intersection). 
-current_mode GetCurrentMonitorMode()
+current_mode GetCurrentMonitorMode(RECT& desktop_size)
 {
 	HRESULT result;
 	DXGI_OUTPUT_DESC1 desc1;
@@ -289,5 +318,6 @@ current_mode GetCurrentMonitorMode()
 	if (FAILED(result))
 		return INVALID;
 
+	desktop_size = desc1.DesktopCoordinates;
 	return desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020 ? IN_HDR : IN_SDR;
 }

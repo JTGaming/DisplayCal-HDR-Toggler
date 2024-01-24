@@ -16,9 +16,9 @@
 
 //these are screen coordinates, for the displaycal taskbar icons
 //customize for each use case
-#define DISPCAL_ICON_LOC 4915, 1415
-#define DISPCAL_LOAD_CAL_LOC 4915, 1080
-#define DISPCAL_RESET_TABLE_LOC 4915, 1110
+#define DISPCAL_ICON_LOC 4876, 1415
+#define DISPCAL_LOAD_CAL_LOC 4876, 1080
+#define DISPCAL_RESET_TABLE_LOC 4876, 1110
 #else
 #define WINDOWS_LEAN_AND_MEAN
 #include <Windows.h>
